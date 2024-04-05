@@ -30,12 +30,40 @@ describe('Game', () => {
         expect(game.score()).toBe(300);
     });
 
-    test('all 5s', () => {
+    test('all 0s', () => {
         const game = new Game();
-        for (let i = 0; i < 21; i++) {
-            game.roll(5);
+        for (let i = 0; i < 20; i++) {
+            game.roll(0);
         }
-        expect(game.score()).toBe(150);
+        expect(game.score()).toBe(0);
+    });
+
+    test('all 1s', () => {
+        const game = new Game();
+        for (let i = 0; i < 20; i++) {
+            game.roll(1);
+        }
+        expect(game.score()).toBe(20);
+    });
+
+    test('almost perfect', () => {
+        const game = new Game();
+        for (let i = 0; i < 10; i++) {
+            game.roll(10);
+        }
+        game.roll(9);
+        game.roll(1);
+        expect(game.score()).toBe(289);
+    });
+
+    test('open last frame does not allow 3 rolls', () => {
+        const game = new Game();
+        for (let i = 0; i < 9; i++) {
+            game.roll(10);
+        }
+        game.roll(3);
+        game.roll(3);
+        expect(() => game.roll(5)).toThrowError('Game is over');
     });
 
     test('any spare or strike score only pins', () => {
