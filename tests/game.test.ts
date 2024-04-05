@@ -50,4 +50,12 @@ describe('Game', () => {
         }
         expect(game.score()).toBe(total);
     });
+
+    test('game over', () => {
+        const game = new Game();
+        for (let i = 0; i < 20; i++) {
+            game.roll(1);
+        }
+        expect(() => game.roll(1)).toThrowError('Game is over');
+    });
 });

@@ -6,18 +6,29 @@ export class Game {
     currentFrame: Frame|undefined = undefined;
 
     public roll(pins: number): void {
-        if (!this.currentFrame || (this.currentFrame.isClosed() && this.frames.length < 10)) {
-            if(this.currentFrame && this.currentFrame.isClosed()){
-                this.frames.push(this.currentFrame);
-            }
-            this.currentFrame = new Frame(this.frames.length === 9);
-            this.frames[this.frames.length - 1]?.setNextFrame(this.currentFrame);
+        if(this.frames.length === 9 && this.getCurrentFrame().isClosed()){
+            throw new Error('Game is over');
         }
 
-        this.currentFrame.addRoll(new Roll(pins));
+        if(this.getCurrentFrame().isClosed()){
+            this.frames.push(this.getCurrentFrame());
+            this.generateCurrentFrame();
+            this.frames[this.frames.length - 1]?.setNextFrame(this.getCurrentFrame());
+        }
+
+        this.getCurrentFrame().addRoll(new Roll(pins));
     }
 
     public score(): number {
         return this.frames.concat(this.currentFrame || []).reduce((acc, frame) => acc + frame.score(), 0);
+    }
+
+    private getCurrentFrame(): Frame {
+        this.currentFrame = this.currentFrame || new Frame(this.frames.length === 9);
+        return <Frame>this.currentFrame;
+    }
+
+    private generateCurrentFrame(): void {
+        this.currentFrame = new Frame(this.frames.length === 9);
     }
 }

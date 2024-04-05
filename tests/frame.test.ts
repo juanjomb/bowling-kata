@@ -14,4 +14,18 @@ describe('Frame', () => {
         frame.addRoll(new Roll(10));
         expect(frame.isStrike()).toBe(true);
     });
+
+    test('is closed', () => {
+        const frame = new Frame(false);
+        frame.addRoll(new Roll(5));
+        frame.addRoll(new Roll(5));
+        expect(frame.isClosed()).toBe(true);
+    });
+
+    test('last is closed', () => {
+        const frame = new Frame(true);
+        frame.addRoll(new Roll(5));
+        frame.addRoll(new Roll(4));
+        expect(frame.isClosed()).toBe(true);
+    });
 });
