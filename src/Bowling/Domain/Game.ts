@@ -10,14 +10,14 @@ export class Game {
             if(this.currentFrame && this.currentFrame.isClosed()){
                 this.frames.push(this.currentFrame);
             }
-            this.currentFrame = new Frame(this.frames.length + 1);
+            this.currentFrame = new Frame(this.frames.length === 9);
+            this.frames[this.frames.length - 1]?.setNextFrame(this.currentFrame);
         }
 
         this.currentFrame.addRoll(new Roll(pins));
     }
 
     public score(): number {
-        const frames = this.frames.length === 10 ? this.frames : this.frames.concat(this.currentFrame || []);
-        return frames.reduce((acc, frame) => acc + frame.score(), 0);
+        return this.frames.concat(this.currentFrame || []).reduce((acc, frame) => acc + frame.score(), 0);
     }
 }
