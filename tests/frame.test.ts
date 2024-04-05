@@ -28,4 +28,33 @@ describe('Frame', () => {
         frame.addRoll(new Roll(4));
         expect(frame.isClosed()).toBe(true);
     });
+
+    test('last is closed with strike', () => {
+        const frame = new Frame(true);
+        frame.addRoll(new Roll(10));
+        frame.addRoll(new Roll(4));
+        frame.addRoll(new Roll(4));
+        expect(frame.isClosed()).toBe(true);
+    });
+
+    test('last is closed with spare', () => {
+        const frame = new Frame(true);
+        frame.addRoll(new Roll(5));
+        frame.addRoll(new Roll(5));
+        frame.addRoll(new Roll(4));
+        expect(frame.isClosed()).toBe(true);
+    });
+
+    test('last does not allow 3 rolls if open', () => {
+        const frame = new Frame(true);
+        frame.addRoll(new Roll(5));
+        frame.addRoll(new Roll(4));
+        expect(() => frame.addRoll(new Roll(5))).toThrowError('Frame is already closed');
+    })
+
+    test('normal frame does not allow 2 strikes', () => {
+        const frame = new Frame(false);
+        frame.addRoll(new Roll(10));
+        expect(() => frame.addRoll(new Roll(10))).toThrowError('Frame is already closed');
+    });
 });
