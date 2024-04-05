@@ -13,6 +13,9 @@ export class Frame {
         if (this.isClosed()) {
             throw new Error('Frame is already closed');
         }
+        if (this.pins() + roll.pins > 10 && !this.isLast) {
+            throw new Error('Invalid roll');
+        }
         this.rolls.push(roll);
     }
 

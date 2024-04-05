@@ -44,4 +44,10 @@ describe('Frame', () => {
         frame.addRoll(new Roll(10));
         expect(() => frame.addRoll(new Roll(10))).toThrowError('Frame is already closed');
     });
+
+    test('normal frame does not allow more than 10 pins', () => {
+        const frame = new Frame(false);
+        frame.addRoll(new Roll(5));
+        expect(() => frame.addRoll(new Roll(6))).toThrowError('Invalid roll');
+    });
 });
