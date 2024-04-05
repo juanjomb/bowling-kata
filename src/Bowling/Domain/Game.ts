@@ -6,9 +6,7 @@ export class Game {
     private currentFrame: Frame|undefined = undefined;
 
     public roll(pins: number): void {
-        if(this.frames.length === 9 && this.getCurrentFrame().isClosed()){
-            throw new Error('Game is over');
-        }
+        this.guardGameIsNotOver();
 
         if(this.getCurrentFrame().isClosed()){
             this.frames.push(this.getCurrentFrame());
@@ -30,5 +28,11 @@ export class Game {
 
     private generateCurrentFrame(): void {
         this.currentFrame = new Frame(this.frames.length === 9);
+    }
+
+    private guardGameIsNotOver(): void {
+        if(this.frames.length === 9 && this.getCurrentFrame().isClosed()){
+            throw new Error('Game is over');
+        }
     }
 }
