@@ -2,8 +2,8 @@ import {Frame} from "./Frame";
 import {Roll} from "./Roll";
 
 export class Game {
-    frames: Frame[] = [];
-    currentFrame: Frame|undefined = undefined;
+    private frames: Frame[] = [];
+    private currentFrame: Frame|undefined = undefined;
 
     public roll(pins: number): void {
         if(this.frames.length === 9 && this.getCurrentFrame().isClosed()){

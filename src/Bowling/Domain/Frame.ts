@@ -1,22 +1,22 @@
 import {Roll} from "./Roll";
 
 export class Frame {
-    rolls: Roll[] = [];
-    readonly isLast: boolean;
-    nextFrame: Frame|undefined = undefined;
+    private rolls: Roll[] = [];
+    private readonly isLast: boolean;
+    private nextFrame: Frame|undefined = undefined;
 
     constructor(isLast: boolean) {
         this.isLast = isLast;
     }
 
-    addRoll(roll: Roll): void {
+    public addRoll(roll: Roll): void {
         if (this.isClosed()) {
             throw new Error('Frame is already closed');
         }
         this.rolls.push(roll);
     }
 
-    isClosed(): boolean {
+    public isClosed(): boolean {
         if (this.isLast) {
             return this.rolls.length === 3 || (this.rolls.length === 2 && this.pins() < 10);
         }
@@ -24,19 +24,11 @@ export class Frame {
         return this.rolls.length === 2 || this.isStrike();
     }
 
-    isStrike(): boolean {
-        return this.rolls.length === 1 && this.rolls[0].pins === 10;
-    }
-
-    isSpare(): boolean {
-        return this.rolls.length === 2 && this.rolls[0].pins + this.rolls[1].pins === 10;
-    }
-
-    setNextFrame(frame: Frame): void {
+    public setNextFrame(frame: Frame): void {
         this.nextFrame = frame;
     }
 
-    score(): number {
+    public score(): number {
         if (this.isLast) {
             return this.pins();
         }
@@ -50,6 +42,19 @@ export class Frame {
         }
 
         return this.pins();
+    }
+
+    public pins(maxRolls: number|undefined = undefined): number {
+        let rolls: Roll[] = maxRolls ? this.rolls.slice(0, maxRolls) : this.rolls;
+        return rolls.reduce((acc, roll) => acc + roll.pins, 0);
+    }
+
+    private isStrike(): boolean {
+        return this.rolls.length === 1 && this.pins(0) === 10;
+    }
+
+    private isSpare(): boolean {
+        return this.rolls.length === 2 && this.pins() === 10;
     }
 
     private bonusForStrike(): number {
@@ -71,10 +76,5 @@ export class Frame {
         }
 
         return this.nextFrame.pins(1);
-    }
-
-    pins(maxRolls: number|undefined = undefined): number {
-        let rolls: Roll[] = maxRolls ? this.rolls.slice(0, maxRolls) : this.rolls;
-        return rolls.reduce((acc, roll) => acc + roll.pins, 0);
     }
 }
